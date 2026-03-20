@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hartford Life | Agentic AI Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #60a5fa;
+            --bg-dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            height: 85vh;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #60a5fa, #2563eb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dim);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chat-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 16px 20px;
+            border-radius: 18px;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .ai-message {
+            align-self: flex-start;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            border-bottom-left-radius: 4px;
+        }
+
+        .input-area {
+            padding: 24px 32px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 16px;
+        }
+
+        input {
+            flex: 1;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 14px 20px;
+            color: white;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--primary-light);
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .typing {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            display: none;
+        }
+
+        .features {
+            padding: 12px 32px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .feature-tag {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .feature-tag:hover {
+            border-color: var(--primary-light);
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Hartford AI Agent (Grok Powered)</div>
+            <div class="status">
+                <div class="status-dot"></div>
+                Live with Grok-2
+            </div>
+        </header>
+
+        <div class="features">
+            <div class="feature-tag" onclick="suggest('What covers POL-001?')">Lookup Policy</div>
+            <div class="feature-tag" onclick="suggest('Calculate premium for 30yo with safety score 9')">Calc Premium</div>
+            <div class="feature-tag" onclick="suggest('What is a deductible?')">Policy FAQ</div>
+            <div class="feature-tag" onclick="suggest('Hello!')">Greetings</div>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+            <div class="message ai-message">
+                Hello! I'm your Hartford Life Agentic Assistant. I can help with policies, premiums, and insurance FAQs using Grok-powered intelligence. How can I assist you today?
+            </div>
+        </div>
+
+        <div class="typing" id="typingIndicator">Grok is thinking...</div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Ask me anything about your insurance..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatId = 'session-' + Math.random().toString(36).substring(7);
+        const chatArea = document.getElementById('chatArea');
+        const userInput = document.getElementById('userInput');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        function appendMessage(role, text) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${role}-message`;
+            msgDiv.innerText = text;
+            chatArea.appendChild(msgDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function suggest(text) {
+            userInput.value = text;
+            sendMessage();
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            appendMessage('user', text);
+            userInput.value = '';
+            
+            typingIndicator.style.display = 'block';
+
+            try {
+                const response = await fetch(`/api/chat?chatId=${chatId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: text
+                });
+                
+                if (response.ok) {
+                    const aiText = await response.text();
+                    appendMessage('ai', aiText);
+                } else {
+                    appendMessage('ai', "Error: Could not connect to the agent. Check your API configuration.");
+                }
+            } catch (err) {
+                appendMessage('ai', "Oops! Something went wrong while talking to Grok.");
+            } finally {
+                typingIndicator.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
